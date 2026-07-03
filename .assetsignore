@@ -1,0 +1,10 @@
+.git
+.git/**
+.gitignore
+NOTES.md
+*.py
+__pycache__
+__pycache__/**
+.wrangler
+.wrangler/**
+wrangler.jsonc
