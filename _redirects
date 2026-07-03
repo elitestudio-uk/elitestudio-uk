@@ -1,0 +1,6 @@
+# Redirect www.elitestudios.uk to elitestudios.uk
+https://www.elitestudios.uk/* https://elitestudios.uk/:splat 301!
+
+# Fallback for any legacy 'elitestudio.uk' path visitors (in case someone typed singular)
+https://elitestudio.uk/* https://elitestudios.uk/:splat 301!
+https://www.elitestudio.uk/* https://elitestudios.uk/:splat 301!
