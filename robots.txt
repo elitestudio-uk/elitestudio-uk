@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://elitestudio.uk/sitemap.xml
+Sitemap: https://elitestudios.uk/sitemap.xml
