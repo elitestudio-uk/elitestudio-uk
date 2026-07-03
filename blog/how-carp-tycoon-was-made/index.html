@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How Carp Tycoon Was Made: Building a Fishing Management Game | Elite Studio</title>
+  <meta name="description" content="A behind-the-scenes dev diary on building Carp Tycoon — the design decisions, the challenges of indie game development, and how we simulate a living fishery." />
+  <link rel="canonical" href="https://elitestudio.uk/blog/how-carp-tycoon-was-made/" />
+  <meta name="author" content="Elite Studio Team" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="Elite Studio" />
+  <meta property="og:title" content="How Carp Tycoon Was Made: Building a Fishing Management Game" />
+  <meta property="og:description" content="A behind-the-scenes dev diary on building Carp Tycoon — the design decisions, the challenges of indie game development, and how we simulate a living fishery." />
+  <meta property="og:url" content="https://elitestudio.uk/blog/how-carp-tycoon-was-made/" />
+  <meta property="og:image" content="https://elitestudio.uk/img/blog-how-made.jpg" />
+  <meta property="article:published_time" content="2026-02-24T09:00:00Z" />
+  <meta property="article:author" content="Elite Studio Team" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="How Carp Tycoon Was Made: Building a Fishing Management Game" />
+  <meta name="twitter:description" content="A behind-the-scenes dev diary on building Carp Tycoon — the design decisions, the challenges of indie game development, and how we simulate a living fishery." />
+  <meta name="twitter:image" content="https://elitestudio.uk/img/blog-how-made.jpg" />
+  <link rel="icon" type="image/png" href="../../img/favicon.png" />
+  <link rel="apple-touch-icon" href="../../img/apple-touch-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../css/style.css" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "How Carp Tycoon Was Made: Building a Fishing Management Game",
+    "description": "A behind-the-scenes dev diary on building Carp Tycoon — the design decisions, the challenges of indie game development, and how we simulate a living fishery.",
+    "image": "https://elitestudio.uk/img/blog-how-made.jpg",
+    "datePublished": "2026-02-24",
+    "dateModified": "2026-02-24",
+    "author": { "@type": "Organization", "name": "Elite Studio Team", "url": "https://elitestudio.uk/about/" },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Elite Studio",
+      "logo": { "@type": "ImageObject", "url": "https://elitestudio.uk/img/elite-studios-logo.png" }
+    },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://elitestudio.uk/blog/how-carp-tycoon-was-made/" },
+    "keywords": "indie game development, how carp tycoon was made, making a management game, game dev diary"
+  }
+  </script>
+</head>
+<body data-nav="blog">
+  <a class="sr-only" href="#main">Skip to content</a>
+    <header class="site-header">
+    <div class="container">
+      <a class="brand" href="../../index.html" aria-label="Elite Studio home">
+        <img src="../../img/elite-studios-logo.png" alt="Elite Studio" width="1717" height="916" />
+      </a>
+      <nav class="nav" aria-label="Primary">
+        <ul class="nav-links">
+          <li><a href="../../games/carp-tycoon/index.html" data-navkey="carp">Carp Tycoon</a></li>
+          <li><a href="../../games/farm-tycoon/index.html" data-navkey="farm">Farm Tycoon</a></li>
+          <li><a href="../../blog/index.html" data-navkey="blog" aria-current="page">Journal</a></li>
+          <li><a href="../../about/index.html" data-navkey="about">About</a></li>
+          <li><a href="../../contact/index.html" data-navkey="contact">Contact</a></li>
+        </ul>
+        <div class="nav-cta">
+          <a class="btn btn--ghost" href="#" aria-label="Join our Discord">Discord</a>
+          <button class="menu-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-nav">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+        </div>
+      </nav>
+    </div>
+    <nav class="mobile-nav" id="mobile-nav" aria-label="Mobile">
+      <a href="../../games/carp-tycoon/index.html">Carp Tycoon</a>
+      <a href="../../games/farm-tycoon/index.html">Farm Tycoon</a>
+      <a href="../../blog/index.html">Journal</a>
+      <a href="../../about/index.html">About</a>
+      <a href="../../contact/index.html">Contact</a>
+      <a href="#" style="color:var(--color-gold-bright);">Join our Discord</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <article class="article">
+      <div class="container">
+        <div class="article__head">
+          <p class="breadcrumb"><a href="../../index.html">Home</a> / <a href="../../blog/index.html">Journal</a> / <span>How Carp Tycoon Was Made</span></p>
+          <span class="eyebrow">Dev Diary</span>
+          <h1 style="font-size: var(--text-2xl); margin-top: var(--space-4);">How Carp Tycoon Was Made: Building a Fishing Management Game</h1>
+          <div class="article__meta">
+            <span>By Elite Studio Team</span><span class="dot"></span>
+            <span>24 February 2026</span><span class="dot"></span>
+            <span>10 min read</span>
+          </div>
+        </div>
+      </div>
+      <figure class="article__hero">
+        <img src="../../img/blog-how-made.jpg" alt="A game designer's desk with concept sketches, a graphics tablet and a monitor showing a stylised lake" />
+      </figure>
+      <div class="container">
+        <div class="prose">
+
+          <p>Most fishing games put you on the bank. We wanted to sit you in the office behind it. This is the honest story of how <a href="../../games/carp-tycoon/index.html">Carp Tycoon</a> came together — the good decisions, the ones we reversed, and what it actually takes to build a management sim as a small indie team.</p>
+
+          <h2>Where the idea came from</h2>
+          <p>Carp Tycoon started, as a lot of good ideas do, with a mismatch. We loved fishing games for their atmosphere and management sims for their depth — but nothing combined the two. There were plenty of games about <em>catching</em> carp and plenty about <em>running</em> a theme park, hospital or zoo. Nobody had made a game about running a commercial carp fishery, despite it being a genuine, thriving business with rich systems underneath: stocking, water management, ground layout, seasonal demand, reputation.</p>
+          <p>That gap was the whole pitch. A subject we understood, a genre we loved, and a combination nobody had tried. It also fit our studio philosophy neatly — we care about grounded subjects, not fantasy for its own sake.</p>
+
+          <h2>Finding the core loop</h2>
+          <p>The first prototype was embarrassingly simple: a single lake, a stocking screen, and a day counter. You'd add fish, set a day-ticket price, advance time, and see whether anglers turned up and whether they caught anything.</p>
+          <p>It was ugly, but it answered the only question that mattered early on — <em>is there a satisfying loop here?</em> The moment it clicked was when we added <strong>carrying capacity</strong>: overstock a lake and the fish stop growing, catches spike then crash, and your reputation with it. Suddenly a decision had a genuine downside. That single trade-off turned a spreadsheet into a game.</p>
+          <blockquote>If your first prototype isn't a little embarrassing, you probably spent too long on it before testing the idea.</blockquote>
+
+          <h2>Simulating a living fishery</h2>
+          <p>The hardest — and most rewarding — part was making the lake feel alive. We didn't want fish to be inventory. We wanted them to be a population.</p>
+          <p>So fish in Carp Tycoon grow over time based on stocking density, water quality and season. They spawn. Certain individuals grow into named specimens that draw anglers from across the country hoping to bank a new personal best. Anglers themselves are simulated too: they have preferences, budgets and expectations, and they talk. A well-run venue spreads by word of mouth; a neglected one empties out the same way.</p>
+          <p>Getting that balance right meant a lot of tuning. Early on the simulation was <em>too</em> punishing — one bad season could sink you permanently, which felt unfair rather than challenging. We spent weeks softening the failure curves so that mistakes are recoverable but still meaningful. That's the constant tightrope in a management sim: consequences that teach, without consequences that punish you out of the game.</p>
+
+          <h2>The art direction</h2>
+          <p>We made an early call to avoid the bright, cartoonish look of a lot of casual sims. Carp fishing has a particular atmosphere — misty dawns, still water, the golden hour on the bank — and we wanted the game to feel like that. Deep, moody, restrained. Our players skew older and take the subject seriously, so the presentation needed to as well.</p>
+          <p>That decision shaped everything from the colour palette to the UI. It's harder to make an atmospheric sim than a colourful one — you can't hide rough edges behind cheerful noise — but it's the right fit for the audience and the subject.</p>
+
+          <h2>The realities of indie development</h2>
+          <p>A few honest lessons for anyone building their own game:</p>
+          <ul>
+            <li><strong>Scope is the enemy.</strong> Every feature we cut made the game better, because it let us finish the ones that mattered. Named specimens made the cut; a full weather-radar minigame did not.</li>
+            <li><strong>Playtesting beats opinions.</strong> We were certain players would love managing staff rotas. They didn't — they wanted to spend their attention on the water. We listened.</li>
+            <li><strong>Systems first, content later.</strong> A deep set of interacting systems generates variety for free. Hand-authored content doesn't scale for a small team.</li>
+            <li><strong>Ship the philosophy, not just the features.</strong> No pay-to-win, no dark patterns, no nagging timers. That's a design constraint, but it's also the whole point.</li>
+          </ul>
+
+          <h2>What's next</h2>
+          <p>Carp Tycoon is still growing, and its sibling <a href="../../games/farm-tycoon/index.html">Farm Tycoon</a> applies the same philosophy to a different living system. If you're interested in the craft of management sims, you might enjoy our <a href="../../blog/tycoon-games-beginners-guide/index.html">beginner's guide to the genre</a>, or our take on <a href="../../blog/why-tycoon-games-comeback-2026/index.html">why tycoon games are having a moment in 2026</a>.</p>
+          <p>The best way to follow development — and to shape it — is our <a href="#">Discord</a>. We read everything, and a surprising amount of the game exists because a player suggested it.</p>
+
+          <hr />
+          <p style="color: var(--color-text-faint); font-size: var(--text-sm);">Written by the Elite Studio Team. We build management sims worth mastering &mdash; starting with <a href="../../games/carp-tycoon/index.html">Carp Tycoon</a> and <a href="../../games/farm-tycoon/index.html">Farm Tycoon</a>.</p>
+        </div>
+      </div>
+    </article>
+
+    <section class="section section--tight">
+      <div class="container">
+        <div class="cta-band reveal">
+          <span class="eyebrow" style="justify-content:center;">Stay in the loop</span>
+          <h2 style="margin-top: var(--space-4);">Follow the studio</h2>
+          <p>Get dev updates, launch dates and beta invites straight to your inbox &mdash; or join the conversation on Discord.</p>
+          <form class="newsletter-form" data-static action="#" method="post" aria-label="Newsletter signup">
+            <label class="sr-only" for="nl">Email address</label>
+            <input id="nl" type="email" name="email" placeholder="you@example.com" required />
+            <button class="btn btn--gold" type="submit">Subscribe</button>
+          </form>
+          <p class="form-status form-note" role="status" hidden></p>
+          <p class="form-note">No spam. Unsubscribe any time. &mdash; <a href="#" style="color:var(--color-gold-bright);">Join our Discord</a></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--tight" style="background: var(--color-bg-2); border-top: 1px solid var(--color-border);">
+      <div class="container">
+        <header class="reveal" style="margin-bottom: var(--space-10);">
+          <span class="eyebrow">Keep reading</span>
+          <h2 class="section-title" style="margin-top: var(--space-4);">Related articles</h2>
+        </header>
+        <div class="grid grid--2">
+          <a class="post-card reveal" href="../../blog/best-carp-fishing-games-2026/index.html">
+            <img class="post-card__img" src="../../img/blog-carp-games.jpg" alt="The Best Carp Fishing Games to Play in 2026" loading="lazy" />
+            <div class="post-card__body">
+              <span class="post-meta">Roundup · 9 min</span>
+              <h3>The Best Carp Fishing Games to Play in 2026</h3>
+              <p>How Carp Tycoon fits among the fishing sims worth playing.</p>
+              <span class="card-link">Read &rarr;</span>
+            </div>
+          </a>
+          <a class="post-card reveal" href="../../blog/tycoon-games-beginners-guide/index.html">
+            <img class="post-card__img" src="../../img/blog-tycoon-guide.jpg" alt="Beginner's Guide to Tycoon Games" loading="lazy" />
+            <div class="post-card__body">
+              <span class="post-meta">Guide · 8 min</span>
+              <h3>Beginner's Guide to Tycoon Games</h3>
+              <p>The mechanics and philosophy behind great management sims.</p>
+              <span class="card-link">Read &rarr;</span>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+    <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <img src="../../img/elite-studios-logo.png" alt="Elite Studio" width="1717" height="916" />
+          <p>A UK indie game studio crafting deep, atmospheric management sims. Games worth mastering.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Games</h4>
+          <ul>
+            <li><a href="../../games/carp-tycoon/index.html">Carp Tycoon</a></li>
+            <li><a href="../../games/farm-tycoon/index.html">Farm Tycoon</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Studio</h4>
+          <ul>
+            <li><a href="../../about/index.html">About</a></li>
+            <li><a href="../../blog/index.html">Journal</a></li>
+            <li><a href="../../contact/index.html">Contact &amp; Press</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Community</h4>
+          <ul>
+            <li><a href="#">Discord</a></li>
+            <li><a href="#journal">Newsletter</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 Elite Studio. Part of the Elite family of UK companies.</span>
+        <span>elitestudio.uk</span>
+      </div>
+    </div>
+  </footer>
+    <a class="discord-fab" href="#" aria-label="Join the Elite Studio Discord">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.369a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.211.375-.444.865-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.1 13.1 0 0 1-1.872-.892.077.077 0 0 1-.008-.128c.126-.094.252-.192.372-.291a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.009c.12.099.246.198.373.292a.077.077 0 0 1-.006.127 12.3 12.3 0 0 1-1.873.891.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.84 19.84 0 0 0 6.002-3.03.077.077 0 0 0 .032-.056c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028ZM8.02 15.331c-1.183 0-2.157-1.086-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.211 0 2.176 1.096 2.157 2.42 0 1.332-.955 2.418-2.157 2.418Zm7.975 0c-1.183 0-2.157-1.086-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.332-.946 2.418-2.157 2.418Z"/></svg>
+    <span class="label">Join Discord</span>
+  </a>
+  <script src="../../js/main.js" defer></script>
+</body>
+</html>
